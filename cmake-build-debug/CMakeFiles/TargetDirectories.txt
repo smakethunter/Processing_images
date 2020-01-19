@@ -1,0 +1,4 @@
+/home/smaket/CLionProjects/img_proc/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/smaket/CLionProjects/img_proc/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/smaket/CLionProjects/img_proc/cmake-build-debug/CMakeFiles/img_proc.dir
+/home/smaket/CLionProjects/img_proc/cmake-build-debug/CMakeFiles/img_proc__debug.dir

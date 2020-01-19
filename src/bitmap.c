@@ -344,17 +344,19 @@ int SaveDIBitmap(const char *filename, BITMAPINFO *info, byte *bits)     /* I - 
         case BI_BITFIELDS :
             infosize += 12; /* Add 3 RGB doubleword masks */
             if (info->bmiHeader.biClrUsed == 0)
-                break;
+            break;
         case BI_RGB :
             if (info->bmiHeader.biBitCount > 8 &&
                 info->bmiHeader.biClrUsed == 0)
-                break;
+            break;
         case BI_RLE8 :
+            break;
         case BI_RLE4 :
             if (info->bmiHeader.biClrUsed == 0)
                 infosize += (1 << info->bmiHeader.biBitCount) * 4;
+
             else
-                infosize += info.bmiHeader.biClrUsed * 4;
+                infosize += info->bmiHeader.biClrUsed * 4;
             break;
     }
 

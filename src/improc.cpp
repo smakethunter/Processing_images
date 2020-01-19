@@ -101,7 +101,8 @@ Image::Image(int h, int w, byte v, BITMAPFILEHEADER bh, BITMAPINFO *bmi):Matrix<
     bitmap_info=bitmap_i;
 
 }
-Image transform_image(Image& image,std::function<double(double)> f){
+std::function<double(double)> negative = [](double x){return 255-x;};
+Image transform_image(Image& image,std::function<double(double)>& f){
 
     for(auto& i:image){
         for(auto& j: i){
@@ -114,10 +115,10 @@ Mask GenerateMask(int size){
     return Mask(size,size,1/std::pow(size,2));
 
 }
-Image img_to_neg(Image& img){
-    return transform_image(img,negative)
-}
-extern Image filter_image(Image& image){
+std::function<Image(Image&)>  img_to_neg=[](Image& img){
+    return transform_image(img,negative);
+};
+std::function<Image(Image&)> filter_image=[](Image& image){
 int k=(image.size()-1)/2;
 Mask mask=GenerateMask(3);
 Image output_image;
@@ -136,4 +137,4 @@ Image output_image;
             }
     }
     return output_image;
-}
+};

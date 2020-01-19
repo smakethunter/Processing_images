@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/img_proc__debug.dir/src/bitmap.c.o CMakeFiles/img_proc__debug.dir/src/improc.cpp.o CMakeFiles/img_proc__debug.dir/main.cpp.o  -o img_proc__debug 

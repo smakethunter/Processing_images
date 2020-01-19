@@ -8,7 +8,8 @@
 #include <cstring>
 #include <iostream>
 #include <list>
-
+#include <memory>
+#include <functional>
 
 template <typename T>
 class Vector {
@@ -91,7 +92,8 @@ public:
     Image(BITMAPFILEHEADER,BITMAPINFO*);
     Image(int h,int w,byte v,BITMAPFILEHEADER bh,BITMAPINFO* bmi);
     int size() const override { return matrix_.size();}
-
+    BITMAPFILEHEADER get_file_header(){ return file_header;}
+    BITMAPINFO* get_bitmap_info(){ return &(*bitmap_info);}
 private:
 
     BITMAPFILEHEADER file_header;
@@ -112,13 +114,12 @@ extern Image load_bitmap(const std::string &filename, BITMAPINFO **BitmapInfo);
 
 extern int save_bitmap(const std::string &filename, Image image_array, BITMAPINFO *BitmapInfo);
 
-extern Image transform_image(Image& image,std::function<double(double)>);
-std::function<double (double)> negative=[](double x){return 255-x;};
+extern Image transform_image(Image& image,std::function<double(double)>&);
+extern std::function<double (double)> negative;
 using Mask=Matrix<double>;
-extern Image img_to_neg(Image&);
+extern std::function<Image(Image&)>  img_to_neg;
 Mask GenerateMask(int);
- Image filter_image(Image& image);
-std::function<Image(Image&)> filter=filter_image;
-std::function<Image(Image&)> transform=img_to_neg;
+extern std::function<Image(Image&)> filter_image;
+
 
 #endif //IMAGE_PROCESSOR_IMPROC_HPP
