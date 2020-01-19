@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/img_proc.dir/main.cpp.o  -o img_proc 
