@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 project(img_proc)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 add_executable(img_proc main.cpp)
 
-add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wno-multichar)
+add_compile_options( -Wno-multichar)
 
 include_directories(
         include
@@ -18,4 +18,3 @@ set(SOURCE_FILES
 
 
 add_executable(img_proc__debug ${SOURCE_FILES} ../main.cpp)
-# == Unit testing using Google Testing Framework ==

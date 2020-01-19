@@ -4,6 +4,7 @@
 #include "bitmap.h"
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <cstring>
 #include <iostream>
@@ -99,10 +100,17 @@ private:
     BITMAPFILEHEADER file_header;
     BITMAPINFO* bitmap_info;
 };
+
+
+extern Image load_bitmap(const std::string &filename, BITMAPINFO **BitmapInfo);
+
+extern int save_bitmap(const std::string &filename, Image image_array, BITMAPINFO *BitmapInfo);
+
+
 class FileIOError {
 
 public:
-    FileIOError( const std::string& msg) : msg_(msg) {}
+    FileIOError( std::string  msg) : msg_(std::move(msg)) {}
     ~FileIOError() {}
 
     std::string getMessage() const {return(msg_);}
@@ -110,9 +118,7 @@ private:
     std::string msg_;
 };
 
-extern Image load_bitmap(const std::string &filename, BITMAPINFO **BitmapInfo);
 
-extern int save_bitmap(const std::string &filename, Image image_array, BITMAPINFO *BitmapInfo);
 
 extern Image transform_image(Image& image,std::function<double(double)>&);
 extern std::function<double (double)> negative;

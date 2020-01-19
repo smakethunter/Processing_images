@@ -38,11 +38,11 @@ extern "C" {
 #  ifndef WIN32
 typedef struct /**** BMP file header structure ****/
 {
-	unsigned short bfType; /* Magic number for file */
-	unsigned int bfSize; /* Size of file */
-	unsigned short bfReserved1; /* Reserved */
-	unsigned short bfReserved2; /* ... */
-	unsigned int bfOffBits; /* Offset to bitmap data */
+    unsigned short bfType; /* Magic number for file */
+    unsigned int bfSize; /* Size of file */
+    unsigned short bfReserved1; /* Reserved */
+    unsigned short bfReserved2; /* ... */
+    unsigned int bfOffBits; /* Offset to bitmap data */
 }BITMAPFILEHEADER;
 
 #  define BF_TYPE 0x4D42             /* "MB" */
@@ -73,16 +73,16 @@ typedef struct /**** BMP file info structure ****/
 
 typedef struct /**** Colormap entry structure ****/
 {
-	unsigned char rgbBlue; /* Blue value */
-	unsigned char rgbGreen; /* Green value */
-	unsigned char rgbRed; /* Red value */
-	unsigned char rgbReserved; /* Reserved */
+    unsigned char rgbBlue; /* Blue value */
+    unsigned char rgbGreen; /* Green value */
+    unsigned char rgbRed; /* Red value */
+    unsigned char rgbReserved; /* Reserved */
 }RGBQUAD;
 
 typedef struct /**** Bitmap information structure ****/
 {
-	BITMAPINFOHEADER bmiHeader; /* Image header */
-	RGBQUAD bmiColors[256]; /* Image colormap */
+    BITMAPINFOHEADER bmiHeader; /* Image header */
+    RGBQUAD bmiColors[256]; /* Image colormap */
 }BITMAPINFO;
 #  endif /* !WIN32 */
 

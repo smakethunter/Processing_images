@@ -9,20 +9,29 @@
 int main() {
     std::string img_root = "/home/smaket/CLionProjects/img_proc/imgs/";
 
-    std::string input_filename = img_root + "lena.bmp";
+    std::string input_filename = img_root + "3x3.bmp";
     BITMAPINFO* bitmap_info = nullptr;
-    Image image_array = load_bitmap(input_filename, &bitmap_info);
-    save_bitmap(img_root + "out.bmp", image_array, bitmap_info);
+    try {
+        Image image_array = load_bitmap(input_filename, &bitmap_info);
+        save_bitmap(img_root + "out.bmp", image_array, bitmap_info);
+        if (bitmap_info) {
+            free(bitmap_info);
+        }
+    }
+    catch(FileIOError &e) {
+        std::cout<<e.getMessage();
 
-    // Czyszczenie.
 
-
-    if (bitmap_info) {
-        free(bitmap_info);
     }
 
 //
+//    // Czyszczenie.
 //
+//
+
+
+
+
 //    typedef struct{
 //    std::string input_root;
 //    std::function<Image(Image&)> function_to_call;
@@ -68,5 +77,5 @@ int main() {
 ////        free(bitmap_info);
 ////    }
 
-    return EXIT_SUCCESS;
+    return 0;
 }

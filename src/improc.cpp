@@ -12,44 +12,44 @@ Image load_bitmap(const std::string& filename, BITMAPINFO **BitmapInfo)
 
         BITMAPFILEHEADER header;
         byte *bitmapBytes = LoadDIBitmap(filename.c_str(), BitmapInfo, &header);
-    try {
+
         if (!bitmapBytes) {
             // Błąd podczas odczytu danych z pliku.
 
-            throw FileIOError("blad odczytu pliku");
-        }
-    }
-    catch(FileIOError &e) {
-        std::cout<<e.getMessage();
-    }
+            throw
 
-    auto h = (size_t) (*BitmapInfo)->bmiHeader.biHeight;
-    auto w = (size_t) (*BitmapInfo)->bmiHeader.biWidth;
-    int bits_per_pixel = (*BitmapInfo)->bmiHeader.biBitCount;
-
-    /* see: https://en.wikipedia.org/wiki/BMP_file_format#Pixel_storage */
-    size_t row_size = (bits_per_pixel * w + 31) / 32 * 4;
-
-    printf("Successfully loaded a %lux%lu image - %s.\n\n", h, w, filename.c_str());
-
-    Image image_array = Image(h,w,bits_per_pixel,header,*BitmapInfo);
-
-
-    byte* reader = bitmapBytes;
-
-    // The order of the pixels in BMP file is as follows: from left to right, from bottom to top (first pixel is from
-    // lower left corner of the picture).
-    for (size_t i = 0; i < h; ++i) {
-        for (size_t j = 0; j < w; ++j) {
-            image_array[h - i - 1][j] = *reader++;
+                    std::runtime_error(("blad odczytu pliku"));
         }
 
-        reader += row_size - w;
-    }
+        else{
+            auto h = (size_t) (*BitmapInfo)->bmiHeader.biHeight;
+            auto w = (size_t) (*BitmapInfo)->bmiHeader.biWidth;
+            int bits_per_pixel = (*BitmapInfo)->bmiHeader.biBitCount;
 
-    free(bitmapBytes);
+            /* see: https://en.wikipedia.org/wiki/BMP_file_format#Pixel_storage */
+            size_t row_size = (bits_per_pixel * w + 31) / 32 * 4;
 
-    return image_array;
+            printf("Successfully loaded a %lux%lu image - %s.\n\n", h, w, filename.c_str());
+
+            Image image_array = Image(h,w,bits_per_pixel,header,*BitmapInfo);
+
+
+            byte* reader = bitmapBytes;
+
+            // The order of the pixels in BMP file is as follows: from left to right, from bottom to top (first pixel is from
+            // lower left corner of the picture).
+            for (size_t i = 0; i < h; ++i) {
+                for (size_t j = 0; j < w; ++j) {
+                    image_array[h - i - 1][j] = *reader++;
+                }
+
+                reader += row_size - w;
+            }
+
+            free(bitmapBytes);
+
+            return image_array;
+        }
 }
 
 int save_bitmap(const std::string& filename, Image image_array, BITMAPINFO* BitmapInfo)
