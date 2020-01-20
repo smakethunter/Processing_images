@@ -31,7 +31,7 @@ Image load_bitmap(const std::string& filename, BITMAPINFO **BitmapInfo)
 
             printf("Successfully loaded a %lux%lu image - %s.\n\n", h, w, filename.c_str());
 
-            Image image_array = Image(h,w,bits_per_pixel,header,*BitmapInfo);
+            Image image_array = Image(h,w,row_size,header,*BitmapInfo);
 
 
             byte* reader = bitmapBytes;
@@ -45,7 +45,7 @@ Image load_bitmap(const std::string& filename, BITMAPINFO **BitmapInfo)
 
                 reader += row_size - w;
             }
-
+            free(reader);
             free(bitmapBytes);
 
             return image_array;
@@ -83,15 +83,7 @@ int save_bitmap(const std::string& filename, Image image_array, BITMAPINFO* Bitm
     return status;
 }
 
-Image::Image(BITMAPFILEHEADER header, BITMAPINFO* BitmapInfo):Matrix<byte>(BitmapInfo->bmiHeader.biHeight,BitmapInfo->bmiHeader.biWidth,BitmapInfo->bmiHeader.biBitCount) {
-    size_t bitmap_info_size = header.bfOffBits - sizeof(BITMAPFILEHEADER);
-    auto* bitmap_i = (BITMAPINFO *) malloc(bitmap_info_size);
-    std::memcpy(bitmap_i, BitmapInfo, bitmap_info_size);
-    file_header=header;
-    bitmap_info=bitmap_i;
-    Matrix<byte>(BitmapInfo->bmiHeader.biHeight,BitmapInfo->bmiHeader.biWidth,BitmapInfo->bmiHeader.biBitCount);
 
-}
 
 Image::Image(int h, int w, byte v, BITMAPFILEHEADER bh, BITMAPINFO *bmi):Matrix<byte>(w,h,v) {
     size_t bitmap_info_size = bh.bfOffBits - sizeof(BITMAPFILEHEADER);
@@ -101,6 +93,8 @@ Image::Image(int h, int w, byte v, BITMAPFILEHEADER bh, BITMAPINFO *bmi):Matrix<
     bitmap_info=bitmap_i;
 
 }
+
+
 std::function<double(double)> negative = [](double x){return 255-x;};
 Image transform_image(Image& image,std::function<double(double)>& f){
 

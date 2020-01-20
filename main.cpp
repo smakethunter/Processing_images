@@ -7,11 +7,12 @@
 #include "improc.hpp"
 
 int main() {
+    try {
     std::string img_root = "/home/smaket/CLionProjects/img_proc/imgs/";
 
-    std::string input_filename = img_root + "3x3.bmp";
+    std::string input_filename = img_root + "7x7.bmp";
     BITMAPINFO* bitmap_info = nullptr;
-    try {
+
         Image image_array = load_bitmap(input_filename, &bitmap_info);
         save_bitmap(img_root + "out.bmp", image_array, bitmap_info);
         if (bitmap_info) {

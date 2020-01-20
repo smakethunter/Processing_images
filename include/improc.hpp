@@ -17,7 +17,7 @@ class Vector {
 public:
 
     Vector(const Vector&) = default;
-
+    Vector()= default;
     std::size_t size() const { return v_.size(); }
 
 
@@ -38,7 +38,7 @@ public:
 
     typename std::vector<T>::const_iterator end() const { return v_.cend(); }
 
-
+    void push_back(T var){v_.push_back(var);}
 private:
     std::vector<T> v_;
 };
@@ -68,15 +68,18 @@ public:
     virtual int size () const {return  matrix_.size();}
 
     std::vector<Vector<T>> matrix_;
+
 };
 
 
-template<typename T>
-Matrix<T>::Matrix(int h,int w, byte v) {
+template <typename T>
+  Matrix<T>::Matrix(int h,int w, byte v) {
     for (int i=0;i<h;h++){
+        Vector<T> vect;
         for(int j=0;j<w;j++){
-            matrix_[i][j]=v;
+            vect.push_back(v);
         }
+        matrix_.push_back(vect);
     }
 }
 
@@ -95,6 +98,8 @@ public:
     int size() const override { return matrix_.size();}
     BITMAPFILEHEADER get_file_header(){ return file_header;}
     BITMAPINFO* get_bitmap_info(){ return &(*bitmap_info);}
+
+    ~Image()= default;
 private:
 
     BITMAPFILEHEADER file_header;
