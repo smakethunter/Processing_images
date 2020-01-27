@@ -13,110 +13,68 @@
 #include <functional>
 
 template <typename T>
-class Vector {
+class Matrix
+{
+    size_t h, w;
+    std::vector < std::vector < T >> m;
 public:
+    Matrix(size_t X, size_t Y,T val) : w(X), h(Y){
 
-    Vector(const Vector&) = default;
-    Vector()= default;
-    std::size_t size() const { return v_.size(); }
-
-
-
-    const T& operator[](std::size_t pos) const { return v_[pos]; }
-
-    T& operator[](std::size_t pos) { return v_[pos]; }
-
-    typename std::vector<T>::const_iterator cbegin() const { return v_.cbegin(); }
-
-    typename std::vector<T>::const_iterator cend() const { return v_.cend(); }
-
-    typename std::vector<T>::iterator begin() { return v_.begin(); }
-
-    typename std::vector<T>::const_iterator begin() const { return v_.cbegin(); }
-
-    typename std::vector<T>::iterator end() { return v_.end(); }
-
-    typename std::vector<T>::const_iterator end() const { return v_.cend(); }
-
-    void push_back(T var){v_.push_back(var);}
-private:
-    std::vector<T> v_;
-};
-
-
-template <typename T>
-class Matrix {
-public:
-    explicit  Matrix<T>():matrix_(){}
-    Matrix(int h,int w, byte v);
-
-
-    Vector<T>& operator[](std::size_t pos) { return matrix_[pos]; }
-
-    typename std::vector<Vector<T>>::const_iterator cbegin() const { return matrix_.cbegin(); }
-
-    typename std::vector<Vector<T>>::const_iterator cend() const { return matrix_.cend(); }
-
-    typename std::vector<Vector<T>>::iterator begin() { return matrix_.begin(); }
-
-    typename std::vector<Vector<T>>::const_iterator begin() const { return matrix_.cbegin(); }
-
-    typename std::vector<Vector<T>>::iterator end() { return matrix_.end(); }
-
-    typename std::vector<Vector<T>>::const_iterator end() const { return matrix_.cend(); }
-
-    virtual int size () const {return  matrix_.size();}
-
-    std::vector<Vector<T>> matrix_;
-
-};
-
-
-template <typename T>
-  Matrix<T>::Matrix(int h,int w, byte v) {
-    for (int i=0;i<h;h++){
-        Vector<T> vect;
-        for(int j=0;j<w;j++){
-            vect.push_back(v);
+        for(int i = 0; i < X; i++) {
+            std::vector<T> v(Y);
+            for (int j = 0; j < Y; j++)
+                v[j] = val;
+            m.push_back(v);
         }
-        matrix_.push_back(vect);
     }
-}
+    std::vector<T>& operator[](size_t idx){return m[idx];}
+    auto begin(){return m.begin();}
+    auto size(){return m.size();}
+    auto end(){return m.end();}
+    size_t X() { return w; }
+    size_t Y() { return h; }
+};
 
 
 
 
 
-template class Matrix<byte>;
+
+using Mask = Matrix<double>;
+
+
 
 class Image :public Matrix<byte>{
-
+    BITMAPFILEHEADER header;
+    BITMAPINFO* BitmapInfo;
 public:
-    Image()=default;
-    Image(BITMAPFILEHEADER,BITMAPINFO*);
-    Image(int h,int w,byte v,BITMAPFILEHEADER bh,BITMAPINFO* bmi);
-    int size() const override { return matrix_.size();}
-    BITMAPFILEHEADER get_file_header(){ return file_header;}
-    BITMAPINFO* get_bitmap_info(){ return &(*bitmap_info);}
 
-    ~Image()= default;
-private:
+    Image(BITMAPFILEHEADER  head, BITMAPINFO* BMP_I, size_t x, size_t y) : Matrix<byte>(x, y, 0), header(head) {
+            size_t bitmap_info_size = header.bfOffBits - sizeof(BITMAPFILEHEADER);
+            BitmapInfo = (BITMAPINFO *) malloc(bitmap_info_size);
+            std::memcpy(BitmapInfo, BMP_I, bitmap_info_size);}
+//  Image(const Image&) = delete;
 
-    BITMAPFILEHEADER file_header;
-    BITMAPINFO* bitmap_info;
+    BITMAPFILEHEADER give_header(){return header;}
+    BITMAPINFO* give_Bmp_I() {return  BitmapInfo;}
+    ~Image()
+    {
+        free(BitmapInfo);
+    }
+//Tu ma być konstruktor kopiujący
+
 };
 
+extern Image load_bitmap(const std::string &filename);
 
-extern Image load_bitmap(const std::string &filename, BITMAPINFO **BitmapInfo);
-
-extern int save_bitmap(const std::string &filename, Image image_array, BITMAPINFO *BitmapInfo);
+extern int save_bitmap(const std::string &filename, Image& image_array);
 
 
 class FileIOError {
 
 public:
     FileIOError( std::string  msg) : msg_(std::move(msg)) {}
-    ~FileIOError() {}
+
 
     std::string getMessage() const {return(msg_);}
 private:
@@ -125,12 +83,17 @@ private:
 
 
 
-extern Image transform_image(Image& image,std::function<double(double)>&);
-extern std::function<double (double)> negative;
-using Mask=Matrix<double>;
-extern std::function<Image(Image&)>  img_to_neg;
-Mask GenerateMask(int);
-extern std::function<Image(Image&)> filter_image;
 
 
+extern void filter(int i, int j, Image& img);
+
+extern void negative (int i, int j, Image& pix);
+
+
+
+
+
+extern Image& transform(Image& img, std::function<void(int, int, Image&)> fun);
+
+extern Mask mask (size_t s);
 #endif //IMAGE_PROCESSOR_IMPROC_HPP
