@@ -12,7 +12,7 @@ std:: function<void(int, int, Image&)> filtr = filter;
 struct
 {
     std::string img_root = "/home/smaket/CLionProjects/Processing_images/imgs/";
-    std::string input_filename ="lena.bmp" ;
+    std::string input_filename ="7x7.bmp" ;
 
     std::vector< std::string> output_filename;
 
